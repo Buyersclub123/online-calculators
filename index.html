@@ -3,139 +3,69 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Property Sales Calculator — Buyers Club POC</title>
+<title>Buyers Club — Calculators</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   :root{
-    --yellow:#FFD60A;
-    --yellow-soft:#FFF1A6;
-    --charcoal:#1A1A1A;
-    --body:#3B3838;
-    --cream:#F8F4E8;
-    --grey-lt:#F2F2F2;
-    --grey-md:#E0E0E0;
-    --green:#34A853;
-    --red:#D93025;
-    --white:#FFFFFF;
+    --yellow:#FFD60A; --yellow-soft:#FFF1A6; --charcoal:#1A1A1A; --body:#3B3838;
+    --cream:#F8F4E8; --grey-lt:#F2F2F2; --grey-md:#E0E0E0; --green:#34A853; --white:#FFFFFF;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;font-family:'Poppins',system-ui,sans-serif;color:var(--body);background:#FAFAFA;line-height:1.5}
-  a{color:inherit}
+  a{color:inherit;text-decoration:none}
 
-  /* Header */
-  header{background:#fff;border-bottom:1px solid #eee;padding:18px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+  header{background:#fff;border-bottom:1px solid #eee;padding:18px 36px;display:flex;align-items:center;justify-content:space-between}
   .logo{font-weight:800;font-size:24px;letter-spacing:-0.5px;color:var(--charcoal)}
   .logo .yellow{color:var(--yellow);text-shadow:0 0 1px rgba(0,0,0,.2)}
-  .nav{display:flex;gap:32px;font-weight:600;font-size:14px}
-  .nav a{text-decoration:none;color:var(--charcoal)}
-  .cta-btn{background:var(--yellow);color:var(--charcoal);font-weight:700;border:none;padding:12px 22px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:14px}
-  .cta-btn.outline{background:transparent;border:2px solid var(--yellow);padding:10px 20px}
-  .cta-btn:hover{filter:brightness(0.95)}
-  .pill{display:inline-block;background:var(--yellow);color:var(--charcoal);padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+  .header-tag{font-size:12px;color:#7B7676;font-weight:600;letter-spacing:0.4px;text-transform:uppercase}
 
-  /* Hero */
-  .hero{padding:48px 36px 24px;max-width:1200px;margin:0 auto;text-align:center}
+  .hero{padding:56px 24px 24px;max-width:900px;margin:0 auto;text-align:center}
   .hero .eyebrow{font-size:11px;letter-spacing:2px;color:var(--body);text-transform:uppercase;font-weight:600;margin-bottom:14px}
-  .hero h1{font-size:46px;font-weight:800;color:var(--charcoal);line-height:1.15;margin:0 0 16px;letter-spacing:-1px}
+  .hero h1{font-size:42px;font-weight:800;color:var(--charcoal);line-height:1.15;margin:0 0 16px;letter-spacing:-1px}
   .hero h1 .underline{display:inline-block;position:relative}
   .hero h1 .underline::after{content:"";position:absolute;left:-4px;right:-4px;bottom:-6px;height:8px;background:var(--yellow);border-radius:4px;z-index:-1;transform:skewX(-2deg)}
-  .hero p{font-size:17px;color:var(--body);max-width:680px;margin:0 auto}
-  .wip-banner{background:var(--yellow-soft);border:1px solid var(--yellow);color:var(--charcoal);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:8px;margin-top:18px}
+  .hero p{font-size:16px;color:var(--body);max-width:600px;margin:0 auto}
 
-  /* Layout */
-  main{max-width:1200px;margin:0 auto;padding:32px 36px 80px}
-  .card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.04);padding:32px;margin-bottom:24px;border:1px solid #eee}
-  .card h2{font-size:24px;font-weight:700;color:var(--charcoal);margin:0 0 6px}
-  .card .eyebrow{font-size:11px;letter-spacing:2px;color:var(--body);text-transform:uppercase;font-weight:600;margin-bottom:6px}
-  .card .section-sub{font-size:14px;color:#7B7676;margin:0 0 24px}
+  main{max-width:900px;margin:0 auto;padding:24px 24px 80px}
 
-  /* Form grid — single column for clarity */
-  .form-grid{display:grid;grid-template-columns:1fr;gap:18px;max-width:680px}
-  .field{display:flex;flex-direction:column;gap:6px}
-  .field label{font-size:13px;font-weight:600;color:var(--charcoal)}
-  .field .help{font-size:11px;color:#9B9696;font-style:italic;margin-top:-2px}
-  .field input, .field select{padding:11px 14px;border:1px solid #ddd;border-radius:8px;font-family:inherit;font-size:14px;color:var(--charcoal);background:#fff;transition:all .15s}
-  .field input:focus, .field select:focus{outline:none;border-color:var(--yellow);box-shadow:0 0 0 3px rgba(255,214,10,0.2)}
+  .calc-card{background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.04);padding:28px;margin-bottom:20px;border:1px solid #eee}
+  .calc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+  .calc-head h2{font-size:22px;font-weight:800;color:var(--charcoal);margin:0;letter-spacing:-0.4px}
+  .calc-head .calc-sub{font-size:13px;color:#7B7676;margin:4px 0 0;font-weight:500}
+  .calc-status{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap}
+  .calc-status.live{background:var(--green);color:#fff}
+  .calc-status.poc{background:var(--yellow);color:var(--charcoal)}
 
-  /* Editable yellow fields — clear visual affordance */
-  .input-edit{position:relative;display:flex;align-items:center;background:var(--yellow);border:2px solid #E8C200;border-radius:8px;padding:0 14px;transition:all .15s;box-shadow:inset 0 -2px 0 rgba(0,0,0,0.08)}
-  .input-edit:hover{background:#FFE54A;border-color:#D4AE00;cursor:text}
-  .input-edit:focus-within{border-color:var(--charcoal);box-shadow:0 0 0 3px rgba(26,26,26,0.15)}
-  .input-edit .currency{font-weight:700;color:var(--charcoal);font-size:14px;margin-right:2px;user-select:none}
-  .input-edit input, .input-edit select{background:transparent;border:none;padding:11px 0;flex:1;font-weight:700;font-family:inherit;font-size:14px;color:var(--charcoal);outline:none}
-  .input-edit input{text-align:left}
-  .input-edit::after{content:"✎";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:rgba(26,26,26,0.4);font-size:14px;pointer-events:none}
-  .input-edit select{cursor:pointer;appearance:none;-webkit-appearance:none;padding-right:24px}
-  .input-edit.is-select::after{content:"▾";color:var(--charcoal);font-weight:700}
+  .version-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .version-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;background:var(--cream);border-radius:10px;border:1px solid #ECE6D2;transition:all .15s}
+  .version-row:hover{background:var(--yellow-soft);border-color:var(--yellow);transform:translateY(-1px)}
+  .version-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+  .version-num{font-weight:800;color:var(--charcoal);font-size:15px;font-variant-numeric:tabular-nums}
+  .version-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:0.3px;text-transform:uppercase}
+  .version-tag.latest{background:var(--charcoal);color:#fff}
+  .version-tag.mobile{background:#1A73E8;color:#fff}
+  .version-tag.desktop{background:#9B9696;color:#fff}
+  .version-note{font-size:12px;color:#7B7676;font-style:italic}
+  .version-cta{font-size:13px;font-weight:700;color:var(--charcoal);background:var(--yellow);padding:8px 14px;border-radius:6px;white-space:nowrap;flex-shrink:0;transition:background .15s}
+  .version-row:hover .version-cta{background:#FFCF00}
 
-  /* Read-only output fields */
-  .field input[readonly], .field .readonly-out{background:var(--cream);font-weight:600;text-align:right;color:var(--charcoal);padding:11px 14px;border:1px solid #ECE6D2;border-radius:8px;font-family:inherit;font-size:14px}
+  .placeholder{padding:24px;text-align:center;color:#9B9696;font-style:italic;font-size:13px;border:2px dashed var(--grey-md);border-radius:10px}
 
-  /* Funds summary table */
-  .funds-table{width:100%;border-collapse:collapse;margin-bottom:8px}
-  .funds-table tr td{padding:10px 0;font-size:14px;border-bottom:1px solid #f0f0f0}
-  .funds-table tr td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
-  .funds-table tr.net td{font-size:18px;font-weight:700;color:var(--charcoal);background:var(--yellow);padding:14px 12px;border-radius:8px}
-  .funds-table tr.net td:first-child{padding-left:14px}
-  .funds-table tr.net td:last-child{padding-right:14px}
+  footer{padding:24px 36px;text-align:center;color:#9B9696;font-size:12px;border-top:1px solid #eee;margin-top:40px}
 
-  /* Options table */
-  .options-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:16px}
-  .options-table th{background:var(--charcoal);color:#fff;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:12px;text-align:left}
-  .options-table th:first-child{border-radius:8px 0 0 8px}
-  .options-table th:last-child{border-radius:0 8px 8px 0;text-align:center}
-  .options-table td{background:var(--cream);padding:14px 12px;font-size:14px;font-variant-numeric:tabular-nums;border-bottom:2px solid #fff}
-  .options-table td:last-child{text-align:center}
-  .options-table tr.selected td{background:var(--yellow-soft);font-weight:700}
-  .options-table tr:hover td{cursor:pointer;background:var(--yellow-soft)}
-  .options-table .pick-btn{background:var(--charcoal);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-  .options-table tr.selected .pick-btn{background:var(--yellow);color:var(--charcoal)}
-
-  /* Verdict band */
-  .verdict{margin-top:22px;border-radius:10px;padding:16px 20px;font-weight:700;font-size:15px;text-align:center}
-  .verdict.funded{background:var(--green);color:#fff}
-  .verdict.short{background:var(--red);color:#fff}
-
-  /* Output / dashboard */
-  .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px}
-  .kpi-tile{background:var(--cream);border-radius:14px;padding:24px;text-align:center;border:1px solid #ECE6D2}
-  .kpi-tile .label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--body);font-weight:600;margin-bottom:8px}
-  .kpi-tile .value{font-size:32px;font-weight:800;color:var(--charcoal);font-variant-numeric:tabular-nums}
-  .kpi-tile .sub{font-size:13px;color:#7B7676;margin-top:6px}
-  .kpi-tile.uplift{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
-  .kpi-tile.uplift .label, .kpi-tile.uplift .sub{color:rgba(255,255,255,0.7)}
-  .kpi-tile.uplift .value{color:var(--yellow)}
-
-  .narrative{background:var(--yellow);padding:24px 28px;border-radius:14px;color:var(--charcoal);font-size:18px;line-height:1.45;font-weight:600;margin-top:24px}
-  .narrative .meta{font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px}
-
-  .chart-wrap{margin-top:24px;height:380px;position:relative}
-
-  /* Floating "how is this calculated?" trigger */
-  .how-trigger{position:fixed;right:24px;bottom:24px;background:var(--charcoal);color:#fff;border:none;border-radius:100px;padding:14px 22px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.2);z-index:60;display:flex;align-items:center;gap:8px}
-  .how-trigger:hover{background:#000}
-
-  /* Modal */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center;padding:24px}
-  .modal-backdrop.open{display:flex}
-  .modal{background:#fff;border-radius:14px;max-width:720px;width:100%;max-height:85vh;overflow-y:auto;padding:32px}
-  .modal h3{margin-top:0;font-size:22px;font-weight:700}
-  .modal .close{float:right;background:none;border:none;font-size:28px;cursor:pointer;color:var(--body);line-height:1;padding:0}
-  .modal .breakdown-block{background:var(--cream);border-radius:10px;padding:18px 20px;margin:18px 0}
-  .modal .breakdown-block h4{margin:0 0 10px;font-size:14px}
-  .modal .breakdown-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;border-bottom:1px dotted #ddd}
-  .modal .breakdown-row:last-child{border:none;font-weight:700}
-
-  footer{padding:24px 36px;text-align:center;color:#9B9696;font-size:12px}
-  footer a{color:#7B7676;text-decoration:underline}
-
-  @media (max-width:760px){
-    .form-grid{grid-template-columns:1fr}
-    .kpi-row{grid-template-columns:1fr}
-    .hero h1{font-size:34px}
+  @media (max-width:680px){
+    header{padding:14px 18px}
+    .logo{font-size:20px}
+    .hero{padding:36px 18px 18px}
+    .hero h1{font-size:30px}
+    .hero p{font-size:14px}
+    main{padding:16px 14px 60px}
+    .calc-card{padding:18px 16px}
+    .calc-head h2{font-size:18px}
+    .version-row{flex-wrap:wrap;padding:12px 14px;gap:8px}
+    .version-cta{width:100%;text-align:center;padding:10px}
   }
 </style>
 </head>
@@ -143,512 +73,106 @@
 
 <header>
   <div class="logo">buyers<span class="yellow">club</span></div>
-  <nav class="nav">
-    <a href="#">AMAP Method</a>
-    <a href="#">The Lab</a>
-    <a href="#">Our Results</a>
-    <a href="#">About Us</a>
-  </nav>
-  <button class="cta-btn">Book Free Strategy Call</button>
+  <span class="header-tag">Calculator Library</span>
 </header>
 
 <section class="hero">
-  <div class="eyebrow">The Tool</div>
-  <h1>Should You <span class="underline">Hold or Sell &amp; Reinvest?</span></h1>
-  <p>Tell us about your current investment property. We'll model the sell &amp; reinvest path against keeping it — after CGT, debt and selling costs — so you can see the full picture.</p>
-  <div class="wip-banner">▣ POC — work in progress, numbers are illustrative</div>
+  <div class="eyebrow">Internal Testing Hub</div>
+  <h1>Buyers Club <span class="underline">Calculators</span></h1>
+  <p>Pick a calculator and a version. Versions are immutable — once a number is published, that file never changes, so you can be sure which build you're testing.</p>
 </section>
 
 <main>
 
-  <!-- SECTION 1 -->
-  <div class="card">
-    <div class="eyebrow">Step 1</div>
-    <h2>Your current property</h2>
-    <p class="section-sub">Tell us about the property you're considering selling.</p>
-    <div class="form-grid">
-      <div class="field">
-        <label>Address (label)</label>
-        <div class="input-edit"><input id="i_address" type="text" value="123 Sample Street" /></div>
-        <span class="help">Just so you can identify it</span>
+  <!-- =========================== -->
+  <!-- SALES CALCULATOR             -->
+  <!-- =========================== -->
+  <div class="calc-card">
+    <div class="calc-head">
+      <div>
+        <h2>Sales Calculator</h2>
+        <p class="calc-sub">Hold vs Sell &amp; Reinvest projection — Property value / Equity / Liquidated cash views, with PDF export.</p>
       </div>
-      <div class="field">
-        <label>Year of acquisition</label>
-        <div class="input-edit"><input id="i_year" type="number" value="2015" /></div>
-        <span class="help">Calendar year you bought it</span>
-      </div>
-      <div class="field">
-        <label>Purchase price</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_price" type="number" value="500000" /></div>
-        <span class="help">What you originally paid</span>
-      </div>
-      <div class="field">
-        <label>Current market value</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_value" type="number" value="750000" /></div>
-        <span class="help">Today's estimate</span>
-      </div>
-      <div class="field">
-        <label>Loan owing</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_loan" type="number" value="420000" /></div>
-        <span class="help">Current mortgage balance</span>
-      </div>
-      <div class="field">
-        <label>Years remaining on loan</label>
-        <div class="input-edit"><input id="i_yrs_left" type="number" value="27" /></div>
-        <span class="help">Years to fully repay (P&amp;I)</span>
-      </div>
-      <div class="field">
-        <label>Stamp duty paid</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_stamp" type="number" value="10000" /></div>
-        <span class="help">At acquisition</span>
-      </div>
-      <div class="field">
-        <label>Conveyancing</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_conv" type="number" value="2000" /></div>
-        <span class="help">Solicitor fees at acquisition</span>
-      </div>
-      <div class="field">
-        <label>Buyer's agent fees</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_ba" type="number" value="14900" /></div>
-        <span class="help">BA fees at acquisition</span>
-      </div>
-      <div class="field">
-        <label>Depreciation claimed to date</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_depr" type="number" value="0" /></div>
-        <span class="help">Reduces cost base for CGT</span>
-      </div>
-      <div class="field">
-        <label>Ownership type</label>
-        <div class="input-edit is-select"><select id="i_ownership">
-          <option value="SMSF">SMSF</option>
-          <option value="Personal" selected>Personal</option>
-          <option value="Company">Company</option>
-          <option value="Trust">Trust</option>
-        </select></div>
-        <span class="help">Drives CGT rate &amp; loan rules</span>
-      </div>
-      <div class="field">
-        <label>Current equity</label>
-        <input id="o_equity" type="text" readonly />
-        <span class="help">Auto: Value − Loan</span>
-      </div>
+      <span class="calc-status poc">POC</span>
     </div>
+    <ul class="version-list">
+
+      <li>
+        <a class="version-row" href="/sales-calculator/v5.31-mobile.html">
+          <div class="version-meta">
+            <span class="version-num">v5.31</span>
+            <span class="version-tag latest">Latest</span>
+            <span class="version-tag mobile">Mobile</span>
+            <span class="version-note">Mobile-optimised — single column, swipe-scroll tables, full-screen drawer</span>
+          </div>
+          <span class="version-cta">Open →</span>
+        </a>
+      </li>
+
+      <li>
+        <a class="version-row" href="/sales-calculator/v5.31.html">
+          <div class="version-meta">
+            <span class="version-num">v5.31</span>
+            <span class="version-tag latest">Latest</span>
+            <span class="version-tag desktop">Desktop</span>
+            <span class="version-note">PDF page-2 footer removed — labels clamp inside chart bounds</span>
+          </div>
+          <span class="version-cta">Open →</span>
+        </a>
+      </li>
+
+      <!--
+        Add new versions ABOVE older ones. Template:
+
+        <li>
+          <a class="version-row" href="/sales-calculator/vX.YZ-mobile.html">
+            <div class="version-meta">
+              <span class="version-num">vX.YZ</span>
+              <span class="version-tag latest">Latest</span>
+              <span class="version-tag mobile">Mobile</span>
+              <span class="version-note">One-line summary of what changed</span>
+            </div>
+            <span class="version-cta">Open →</span>
+          </a>
+        </li>
+
+        Remove the "Latest" badge from the previous row when you do.
+      -->
+
+    </ul>
   </div>
 
-  <!-- SECTION 2 -->
-  <div class="card">
-    <div class="eyebrow">Step 2</div>
-    <h2>What if you sell?</h2>
-    <p class="section-sub">Here's the cash you'd free up after tax, debt and selling costs — and what you could do with it.</p>
-
-    <h3 style="font-size:15px;margin:0 0 12px;color:var(--charcoal)">Funds available</h3>
-    <table class="funds-table">
-      <tr><td>Sale price</td><td id="o_sale_price"></td></tr>
-      <tr><td>Selling costs (2% of sale price)</td><td id="o_sell_costs"></td></tr>
-      <tr><td>CGT payable</td><td id="o_cgt"></td></tr>
-      <tr><td>Debt payoff</td><td id="o_debt_off"></td></tr>
-      <tr class="net"><td>Net cash available</td><td id="o_net_cash"></td></tr>
-    </table>
-
-    <h3 style="font-size:15px;margin:24px 0 12px;color:var(--charcoal)">Where you'd buy</h3>
-    <div class="form-grid">
-      <div class="field">
-        <label>State</label>
-        <div class="input-edit is-select"><select id="i_state">
-          <option>QLD</option><option>NSW</option><option>VIC</option><option>WA</option>
-          <option>SA</option><option>ACT</option><option>NT</option><option>TAS</option>
-        </select></div>
-        <span class="help">Drives stamp duty calc. Default QLD (recommended)</span>
+  <!-- =========================== -->
+  <!-- ADD MORE CALCULATORS HERE   -->
+  <!-- =========================== -->
+  <!--
+  <div class="calc-card">
+    <div class="calc-head">
+      <div>
+        <h2>Next Calculator Name</h2>
+        <p class="calc-sub">One-line description.</p>
       </div>
-      <div class="field">
-        <label>Deposit %</label>
-        <input id="i_deposit" type="text" readonly />
-        <span class="help">Auto from ownership type</span>
-      </div>
-      <div class="field">
-        <label>Buyer's agent fees per property</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_new_ba" type="number" value="16900" /></div>
-      </div>
-      <div class="field">
-        <label>Conveyancing per property</label>
-        <div class="input-edit"><span class="currency">$</span><input id="i_new_conv" type="number" value="2500" /></div>
-      </div>
+      <span class="calc-status poc">POC</span>
     </div>
-
-    <h3 style="font-size:15px;margin:24px 0 12px;color:var(--charcoal)">What could you buy with this cash?</h3>
-    <table class="options-table" id="options_tbl">
-      <thead><tr><th>Option</th><th>Property cost each</th><th>Total cash deployed</th><th>Pick</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <div class="verdict funded" id="verdict"></div>
+    <ul class="version-list">
+      <li>
+        <a class="version-row" href="/next-calculator/v1.0.html">
+          <div class="version-meta">
+            <span class="version-num">v1.0</span>
+            <span class="version-tag latest">Latest</span>
+          </div>
+          <span class="version-cta">Open →</span>
+        </a>
+      </li>
+    </ul>
   </div>
-
-  <!-- SECTION 3 — comparison -->
-  <div class="card">
-    <div class="eyebrow">The result</div>
-    <h2>The comparison at <span id="o_yoi">2044</span></h2>
-    <p class="section-sub">Liquidated position = what's in the bank if you sold all properties at the year of interest, after CGT, debt and selling costs.</p>
-
-    <div class="kpi-row">
-      <div class="kpi-tile">
-        <div class="label">Keep</div>
-        <div class="value" id="o_kpi_a">—</div>
-        <div class="sub">Liquidated position</div>
-      </div>
-      <div class="kpi-tile">
-        <div class="label">Sell &amp; Reinvest</div>
-        <div class="value" id="o_kpi_b">—</div>
-        <div class="sub">Liquidated position</div>
-      </div>
-      <div class="kpi-tile uplift">
-        <div class="label">Uplift</div>
-        <div class="value" id="o_kpi_uplift">—</div>
-        <div class="sub" id="o_kpi_uplift_pct">—</div>
-      </div>
-    </div>
-
-    <div class="chart-wrap"><canvas id="chart"></canvas></div>
-
-    <div class="narrative" id="narrative"></div>
-  </div>
+  -->
 
 </main>
 
-<button class="how-trigger" onclick="document.getElementById('how_modal').classList.add('open')">⓵ How is this calculated?</button>
-
-<div class="modal-backdrop" id="how_modal">
-  <div class="modal">
-    <button class="close" onclick="document.getElementById('how_modal').classList.remove('open')">×</button>
-    <h3>How is this calculated?</h3>
-
-    <div class="breakdown-block">
-      <h4>Assumptions</h4>
-      <div class="breakdown-row"><span>Annual property growth</span><span id="m_growth">6.5% p.a.</span></div>
-      <div class="breakdown-row"><span>Selling costs</span><span>2.0% of sale price</span></div>
-      <div class="breakdown-row"><span>CGT rate (your ownership type)</span><span id="m_cgt"></span></div>
-      <div class="breakdown-row"><span>Standard new-loan term</span><span>30 years (P&amp;I)</span></div>
-      <div class="breakdown-row"><span>Loan paydown method</span><span>Linear approximation</span></div>
-    </div>
-
-    <div class="breakdown-block">
-      <h4>CGT calculation on your sale</h4>
-      <div class="breakdown-row"><span>Sale price</span><span id="m_sale"></span></div>
-      <div class="breakdown-row"><span>− Cost base (price + acquisition costs − depreciation)</span><span id="m_cost_base"></span></div>
-      <div class="breakdown-row"><span>= Capital gain</span><span id="m_cap_gain"></span></div>
-      <div class="breakdown-row"><span>× CGT rate</span><span id="m_cgt2"></span></div>
-      <div class="breakdown-row"><span>= CGT payable</span><span id="m_cgt_payable"></span></div>
-    </div>
-
-    <div class="breakdown-block">
-      <h4>Net cash from sale</h4>
-      <div class="breakdown-row"><span>Sale price</span><span id="m_sale2"></span></div>
-      <div class="breakdown-row"><span>− Selling costs (2%)</span><span id="m_sell2"></span></div>
-      <div class="breakdown-row"><span>− CGT payable</span><span id="m_cgt3"></span></div>
-      <div class="breakdown-row"><span>− Debt payoff</span><span id="m_debt2"></span></div>
-      <div class="breakdown-row"><span>= Net cash for reinvestment</span><span id="m_net"></span></div>
-    </div>
-
-    <p style="font-size:11px;color:#9B9696;margin-top:18px">This tool is illustrative only. It does not model rental income, ongoing expenses, interest costs, inflation, or tax outside CGT. Real outcomes depend on market conditions and individual circumstances.</p>
-  </div>
-</div>
-
 <footer>
-  © 2026 Buyers Club Australia · Property Sales Calculator POC
+  Buyers Club · internal calculator hub · last edit: edit this date when you publish
 </footer>
 
-<script>
-  // ================= Calculator =================
-  const CGT_RATES   = { SMSF: 0.10,  Personal: 0.235, Company: 0.25, Trust: 0.235 };
-  const DEPOSIT_PCT = { SMSF: 0.20,  Personal: 0.12,  Company: 0.12, Trust: 0.12 };
-
-  // Calendar year inputs use a single growth rate for the POC
-  const GROWTH = 0.065;
-  const SELL_COST_PCT = 0.02;
-  const NEW_LOAN_TERM = 30;
-  const TIMELINE_YRS = 18;
-  const START_YEAR = new Date().getFullYear();
-  const YOI = START_YEAR + TIMELINE_YRS;
-
-  // Australian residential stamp duty — piecewise (simplified, matches main bands of v7 sheet)
-  function stampDuty(state, price){
-    if(!price || price<=0) return 0;
-    let base=0, fixed=0;
-    switch(state){
-      case 'VIC':
-        base = price<=25000 ? price*0.014
-             : price<=130000 ? 350+(price-25000)*0.024
-             : price<=960000 ? 2870+(price-130000)*0.06
-             : price<=2000000 ? price*0.055
-             : 110000+(price-2000000)*0.065;
-        return base + 122 + price*0.0025;
-      case 'NSW':
-        base = price<=16000 ? price*0.0125
-             : price<=35000 ? 200+(price-16000)*0.015
-             : price<=93000 ? 485+(price-35000)*0.0175
-             : price<=351000 ? 1500+(price-93000)*0.035
-             : price<=1168000 ? 10530+(price-351000)*0.045
-             : 47295+(price-1168000)*0.055;
-        return base + 343.4;
-      case 'QLD':
-        base = price<=5000 ? 0
-             : price<=75000 ? (price-5000)*0.015
-             : price<=540000 ? 1050+(price-75000)*0.035
-             : price<=1000000 ? 17325+(price-540000)*0.045
-             : 38025+(price-1000000)*0.0575;
-        let title = price>180000 ? Math.ceil((price-180000)/10000)*43.56 : 0;
-        return base + 463.96 + title;
-      case 'WA':
-        base = price<=120000 ? price*0.019
-             : price<=150000 ? 2280+(price-120000)*0.0285
-             : price<=360000 ? 3135+(price-150000)*0.038
-             : price<=725000 ? 11115+(price-360000)*0.0475
-             : 28453+(price-725000)*0.0515;
-        let titleW = price<=300000 ? 261 : 261+Math.floor((price-300000)/100000)*20;
-        return base + 210 + titleW;
-      case 'SA':
-        base = price<=12000 ? price*0.01
-             : price<=30000 ? 120+(price-12000)*0.02
-             : price<=50000 ? 480+(price-30000)*0.03
-             : price<=100000 ? 1080+(price-50000)*0.035
-             : price<=200000 ? 2830+(price-100000)*0.04
-             : price<=250000 ? 6830+(price-200000)*0.0425
-             : price<=300000 ? 8955+(price-250000)*0.0475
-             : price<=500000 ? 11330+(price-300000)*0.05
-             : 21330+(price-500000)*0.055;
-        return base + 192 + price*0.0096;
-      case 'ACT':
-        base = price<=200000 ? Math.max(20, price*0.012)
-             : price<=300000 ? 2400+(price-200000)*0.022
-             : price<=500000 ? 4600+(price-300000)*0.034
-             : price<=750000 ? 11400+(price-500000)*0.0432
-             : price<=1000000 ? 22200+(price-750000)*0.059
-             : 36950+(price-1000000)*0.064;
-        return base + 635;
-      case 'NT':
-        base = price<=525000 ? (0.06571441*Math.pow(price/1000,2) + 15*(price/1000))
-             : price<=3000000 ? price*0.0495
-             : price<=5000000 ? price*0.0575
-             : price*0.0595;
-        return base + 344;
-      case 'TAS':
-        base = price<=3000 ? 50
-             : price<=25000 ? 50+(price-3000)*0.0175
-             : price<=75000 ? 435+(price-25000)*0.0225
-             : price<=200000 ? 1560+(price-75000)*0.035
-             : price<=375000 ? 5935+(price-200000)*0.04
-             : price<=725000 ? 12935+(price-375000)*0.0425
-             : 27810+(price-725000)*0.045;
-        return base + 492;
-    }
-    return price * 0.045;
-  }
-
-  // ===== Read inputs =====
-  function readInputs(){
-    return {
-      address: document.getElementById('i_address').value,
-      year:    +document.getElementById('i_year').value,
-      price:   +document.getElementById('i_price').value,
-      value:   +document.getElementById('i_value').value,
-      loan:    +document.getElementById('i_loan').value,
-      yrs_left:+document.getElementById('i_yrs_left').value,
-      stamp:   +document.getElementById('i_stamp').value,
-      conv:    +document.getElementById('i_conv').value,
-      ba:      +document.getElementById('i_ba').value,
-      depr:    +document.getElementById('i_depr').value,
-      own:     document.getElementById('i_ownership').value,
-      state:   document.getElementById('i_state').value,
-      new_ba:  +document.getElementById('i_new_ba').value,
-      new_conv:+document.getElementById('i_new_conv').value,
-    };
-  }
-
-  // ===== Core compute =====
-  function compute(){
-    const x = readInputs();
-    const cgt_rate = CGT_RATES[x.own];
-    const deposit_pct = DEPOSIT_PCT[x.own];
-
-    // Existing property
-    const equity = x.value - x.loan;
-    const cost_base = x.price + x.stamp + x.conv + x.ba - x.depr;
-    const cap_gain = Math.max(0, x.value - cost_base);
-    const cgt = cap_gain * cgt_rate;
-    const sell_costs = x.value * SELL_COST_PCT;
-    const debt_off = x.loan;
-    const net_cash = x.value - sell_costs - cgt - debt_off;
-
-    // Funding options for N=1..5
-    const opts = [];
-    for(let n=1; n<=5; n++){
-      // iterate to find max cost
-      let cost = (net_cash/n - x.new_ba - x.new_conv) / deposit_pct;  // first guess
-      for(let it=0; it<3; it++){
-        const stamp = stampDuty(x.state, cost);
-        const total = n*(cost*deposit_pct + stamp + x.new_ba + x.new_conv);
-        // refine
-        cost = (net_cash/n - x.new_ba - x.new_conv - stamp/cost*cost) / deposit_pct;
-        // simpler: use linearisation
-        const eff_stamp_rate = stamp / Math.max(cost,1);
-        cost = (net_cash/n - x.new_ba - x.new_conv) / (deposit_pct + eff_stamp_rate);
-      }
-      cost = Math.max(0, cost);
-      const stamp = stampDuty(x.state, cost);
-      const upfront_per = cost*deposit_pct + stamp + x.new_ba + x.new_conv;
-      const total = n * upfront_per;
-      opts.push({n, cost, stamp, upfront_per, total});
-    }
-
-    // ===== Year-by-year projection =====
-    // Sc A: keep existing
-    // Sc B: sell existing + buy N new (using selected option)
-    const selectedN = window._selected || 2;
-    const selOpt = opts[selectedN-1];
-    const new_loan_per = selOpt.cost * (1 - deposit_pct);
-
-    const yrs = [];
-    for(let t=0; t<=TIMELINE_YRS; t++){
-      const calYear = START_YEAR + t;
-      // Sc A
-      const a_value = x.value * Math.pow(1+GROWTH, t);
-      const a_loan  = Math.max(0, x.loan * Math.max(0, 1 - t/x.yrs_left));
-      const a_eq    = a_value - a_loan;
-      const a_cap   = Math.max(0, a_value - cost_base);
-      const a_cgt   = a_cap * cgt_rate;
-      const a_sell  = a_value * SELL_COST_PCT;
-      const a_liq   = a_value - a_sell - a_cgt - a_loan;
-
-      // Sc B
-      const b_value = selectedN * selOpt.cost * Math.pow(1+GROWTH, t);
-      const b_loan  = Math.max(0, selectedN * new_loan_per * Math.max(0, 1 - t/NEW_LOAN_TERM));
-      const b_eq    = b_value - b_loan;
-      // cost base for B = N × (cost + stamp + new_ba + new_conv) — simplification
-      const b_cost_base = selectedN * (selOpt.cost + selOpt.stamp + x.new_ba + x.new_conv);
-      const b_cap   = Math.max(0, b_value - b_cost_base);
-      const b_cgt   = b_cap * cgt_rate;
-      const b_sell  = b_value * SELL_COST_PCT;
-      const b_liq   = b_value - b_sell - b_cgt - b_loan;
-
-      yrs.push({calYear, a_value, a_loan, a_eq, a_liq, b_value, b_loan, b_eq, b_liq});
-    }
-
-    return {x, equity, cost_base, cap_gain, cgt, sell_costs, debt_off, net_cash, opts, selectedN, selOpt, yrs};
-  }
-
-  // ===== Format helpers =====
-  const fmt$ = v => '$' + Math.round(v).toLocaleString();
-  const fmt$M = v => {
-    if(Math.abs(v) >= 1000000) return '$' + (v/1000000).toFixed(2) + 'M';
-    return '$' + Math.round(v/1000) + 'k';
-  };
-  const fmtPct = v => (v*100).toFixed(1) + '%';
-
-  // ===== Render =====
-  let chart;
-  function render(){
-    const r = compute();
-    document.getElementById('o_equity').value = fmt$(r.equity);
-    document.getElementById('o_sale_price').textContent = fmt$(r.x.value);
-    document.getElementById('o_sell_costs').textContent = '−' + fmt$(r.sell_costs);
-    document.getElementById('o_cgt').textContent = '−' + fmt$(r.cgt);
-    document.getElementById('o_debt_off').textContent = '−' + fmt$(r.debt_off);
-    document.getElementById('o_net_cash').textContent = fmt$(r.net_cash);
-    document.getElementById('i_deposit').value = fmtPct(DEPOSIT_PCT[r.x.own]);
-
-    // Options table
-    const tbody = document.querySelector('#options_tbl tbody');
-    tbody.innerHTML = '';
-    r.opts.forEach((o,i) => {
-      const tr = document.createElement('tr');
-      if(o.n === r.selectedN) tr.classList.add('selected');
-      tr.innerHTML = `
-        <td>${o.n} ${o.n===1?'property':'properties'}</td>
-        <td>${fmt$M(o.cost)} each</td>
-        <td>${fmt$M(o.total)}</td>
-        <td><button class="pick-btn">${o.n===r.selectedN?'Selected':'Pick'}</button></td>`;
-      tr.addEventListener('click', () => { window._selected = o.n; render(); });
-      tbody.appendChild(tr);
-    });
-
-    // Verdict (always FUNDED since count auto-derived from selected option)
-    const v = document.getElementById('verdict');
-    const sel = r.selOpt;
-    v.classList.remove('short');
-    v.classList.add('funded');
-    v.textContent = `✓ Funded — ${r.selectedN} ${r.selectedN===1?'property':'properties'} at ${fmt$M(sel.cost)} each, deploying ${fmt$M(sel.total)} of your ${fmt$M(r.net_cash)} available cash.`;
-
-    // Comparison KPIs (at YoI)
-    const last = r.yrs[r.yrs.length-1];
-    document.getElementById('o_yoi').textContent = last.calYear;
-    document.getElementById('o_kpi_a').textContent = fmt$M(last.a_liq);
-    document.getElementById('o_kpi_b').textContent = fmt$M(last.b_liq);
-    const uplift = last.b_liq - last.a_liq;
-    const upliftPct = (last.b_liq / last.a_liq - 1);
-    document.getElementById('o_kpi_uplift').textContent = (uplift>=0?'+':'') + fmt$M(uplift);
-    document.getElementById('o_kpi_uplift_pct').textContent = (upliftPct>=0?'+':'') + fmtPct(upliftPct) + ' vs Keep';
-
-    // Narrative
-    const nar = document.getElementById('narrative');
-    nar.innerHTML = `<div class="meta">By ${last.calYear}</div>
-      Sell &amp; Reinvest leaves you <strong>${fmt$M(uplift)}</strong> more in cash than holding —
-      a <strong>${fmtPct(upliftPct)} advantage</strong> after CGT, debt and selling costs.
-      Keep = <strong>${fmt$M(last.a_liq)}</strong>. Sell &amp; Reinvest = <strong>${fmt$M(last.b_liq)}</strong>.`;
-
-    // Chart
-    const labels = r.yrs.map(y => y.calYear);
-    const aData = r.yrs.map(y => Math.round(y.a_liq));
-    const bData = r.yrs.map(y => Math.round(y.b_liq));
-    if(chart){ chart.data.labels = labels; chart.data.datasets[0].data = aData; chart.data.datasets[1].data = bData; chart.update(); }
-    else {
-      const ctx = document.getElementById('chart').getContext('2d');
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            {label:'Keep (Liquidated)', data:aData, borderColor:'#1A1A1A', backgroundColor:'rgba(26,26,26,0.05)', borderWidth:3, tension:0.25, pointBackgroundColor:'#1A1A1A', pointRadius:4},
-            {label:'Sell & Reinvest (Liquidated)', data:bData, borderColor:'#FFD60A', backgroundColor:'rgba(255,214,10,0.15)', borderWidth:4, tension:0.25, pointBackgroundColor:'#FFD60A', pointRadius:4, fill:true},
-          ]
-        },
-        options: {
-          responsive:true, maintainAspectRatio:false,
-          plugins: {
-            legend:{position:'bottom', labels:{font:{family:'Poppins', weight:'600'}, usePointStyle:true, pointStyle:'circle'}},
-            tooltip:{callbacks:{label: c => c.dataset.label + ': ' + fmt$M(c.parsed.y)}}
-          },
-          scales: {
-            y:{ ticks:{callback: v => fmt$M(v), font:{family:'Poppins'}}, grid:{color:'#eee'}},
-            x:{ ticks:{font:{family:'Poppins'}}, grid:{display:false}}
-          }
-        }
-      });
-    }
-
-    // Modal breakdown
-    document.getElementById('m_cgt').textContent = fmtPct(CGT_RATES[r.x.own]);
-    document.getElementById('m_cgt2').textContent = fmtPct(CGT_RATES[r.x.own]);
-    document.getElementById('m_cgt3').textContent = '−' + fmt$(r.cgt);
-    document.getElementById('m_sale').textContent = fmt$(r.x.value);
-    document.getElementById('m_sale2').textContent = fmt$(r.x.value);
-    document.getElementById('m_cost_base').textContent = fmt$(r.cost_base);
-    document.getElementById('m_cap_gain').textContent = fmt$(r.cap_gain);
-    document.getElementById('m_cgt_payable').textContent = fmt$(r.cgt);
-    document.getElementById('m_sell2').textContent = '−' + fmt$(r.sell_costs);
-    document.getElementById('m_debt2').textContent = '−' + fmt$(r.debt_off);
-    document.getElementById('m_net').textContent = fmt$(r.net_cash);
-  }
-
-  // Wire up listeners
-  document.querySelectorAll('input,select').forEach(el => el.addEventListener('input', render));
-
-  // Default selection
-  window._selected = 2;
-  render();
-
-  // Modal close on backdrop click
-  document.getElementById('how_modal').addEventListener('click', e => {
-    if(e.target.id === 'how_modal') e.currentTarget.classList.remove('open');
-  });
-</script>
 </body>
 </html>
