@@ -51,9 +51,21 @@
   .version-cta{font-size:13px;font-weight:700;color:var(--charcoal);background:var(--yellow);padding:8px 14px;border-radius:6px;white-space:nowrap;flex-shrink:0;transition:background .15s}
   .version-row:hover .version-cta{background:#FFCF00}
 
-  .placeholder{padding:24px;text-align:center;color:#9B9696;font-style:italic;font-size:13px;border:2px dashed var(--grey-md);border-radius:10px}
+  .loading-row, .error-row{padding:14px 16px;background:var(--grey-lt);border-radius:10px;color:#7B7676;font-style:italic;font-size:13px;text-align:center}
+  .error-row{background:#FDEAEA;color:#a01818}
+  .error-row a{color:#a01818;text-decoration:underline}
+
+  .older-toggle{margin-top:10px;background:transparent;border:none;color:#7B7676;font-family:inherit;font-size:12px;cursor:pointer;padding:6px 0;font-weight:600;text-decoration:underline}
+  .older-toggle:hover{color:var(--charcoal)}
+  .older-list{margin-top:8px;display:none}
+  .older-list.open{display:flex;flex-direction:column;gap:6px}
+  .older-list .version-row{background:#fafafa;border-color:#eee;padding:10px 14px}
+  .older-list .version-num{font-size:13px;color:#7B7676}
+
+  .last-updated{font-size:11px;color:#9B9696;margin-top:14px;text-align:center;font-style:italic}
 
   footer{padding:24px 36px;text-align:center;color:#9B9696;font-size:12px;border-top:1px solid #eee;margin-top:40px}
+  footer a{color:#7B7676;text-decoration:underline}
 
   @media (max-width:680px){
     header{padding:14px 18px}
@@ -79,100 +91,155 @@
 <section class="hero">
   <div class="eyebrow">Internal Testing Hub</div>
   <h1>Buyers Club <span class="underline">Calculators</span></h1>
-  <p>Pick a calculator and a version. Versions are immutable — once a number is published, that file never changes, so you can be sure which build you're testing.</p>
+  <p>Each calculator's latest desktop &amp; mobile build is shown below. Versions are immutable — older builds remain at their original URLs forever.</p>
 </section>
 
-<main>
-
-  <!-- =========================== -->
-  <!-- SALES CALCULATOR             -->
-  <!-- =========================== -->
-  <div class="calc-card">
-    <div class="calc-head">
-      <div>
-        <h2>Sales Calculator</h2>
-        <p class="calc-sub">Hold vs Sell &amp; Reinvest projection — Property value / Equity / Liquidated cash views, with PDF export.</p>
-      </div>
-      <span class="calc-status poc">POC</span>
-    </div>
-    <ul class="version-list">
-
-      <li>
-        <a class="version-row" href="/sales-calculator/v5.31-mobile.html">
-          <div class="version-meta">
-            <span class="version-num">v5.31</span>
-            <span class="version-tag latest">Latest</span>
-            <span class="version-tag mobile">Mobile</span>
-            <span class="version-note">Mobile-optimised — single column, swipe-scroll tables, full-screen drawer</span>
-          </div>
-          <span class="version-cta">Open →</span>
-        </a>
-      </li>
-
-      <li>
-        <a class="version-row" href="/sales-calculator/v5.31.html">
-          <div class="version-meta">
-            <span class="version-num">v5.31</span>
-            <span class="version-tag latest">Latest</span>
-            <span class="version-tag desktop">Desktop</span>
-            <span class="version-note">PDF page-2 footer removed — labels clamp inside chart bounds</span>
-          </div>
-          <span class="version-cta">Open →</span>
-        </a>
-      </li>
-
-      <!--
-        Add new versions ABOVE older ones. Template:
-
-        <li>
-          <a class="version-row" href="/sales-calculator/vX.YZ-mobile.html">
-            <div class="version-meta">
-              <span class="version-num">vX.YZ</span>
-              <span class="version-tag latest">Latest</span>
-              <span class="version-tag mobile">Mobile</span>
-              <span class="version-note">One-line summary of what changed</span>
-            </div>
-            <span class="version-cta">Open →</span>
-          </a>
-        </li>
-
-        Remove the "Latest" badge from the previous row when you do.
-      -->
-
-    </ul>
-  </div>
-
-  <!-- =========================== -->
-  <!-- ADD MORE CALCULATORS HERE   -->
-  <!-- =========================== -->
-  <!--
-  <div class="calc-card">
-    <div class="calc-head">
-      <div>
-        <h2>Next Calculator Name</h2>
-        <p class="calc-sub">One-line description.</p>
-      </div>
-      <span class="calc-status poc">POC</span>
-    </div>
-    <ul class="version-list">
-      <li>
-        <a class="version-row" href="/next-calculator/v1.0.html">
-          <div class="version-meta">
-            <span class="version-num">v1.0</span>
-            <span class="version-tag latest">Latest</span>
-          </div>
-          <span class="version-cta">Open →</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  -->
-
+<main id="calc_list">
+  <!-- Calculators are rendered here by the JS below.
+       Add a new calculator: append an entry to the CALCULATORS array. -->
+  <div class="loading-row">Loading latest versions from GitHub…</div>
 </main>
 
 <footer>
-  Buyers Club · internal calculator hub · last edit: edit this date when you publish
+  Buyers Club · internal calculator hub · auto-updates from <a href="https://github.com/Buyersclub123/online-calculators" target="_blank" rel="noopener">GitHub</a>
 </footer>
+
+<script>
+/* =============================================================================
+   AUTO-DISCOVERING LANDING PAGE
+
+   For each calculator, this script queries the GitHub Contents API to list the
+   files in that calculator's folder, parses out the version numbers, and links
+   to the highest desktop + mobile version automatically.
+
+   To add a new calculator: append an object to the CALCULATORS array below.
+   No other edits to this file are needed when you publish a new version.
+   ============================================================================= */
+
+const REPO = 'Buyersclub123/online-calculators';
+
+const CALCULATORS = [
+  {
+    folder: 'sales-calculator',
+    name:   'Sales Calculator',
+    sub:    "Hold vs Sell & Reinvest projection — Property value / Equity / Liquidated cash views, with PDF export.",
+    status: 'POC',
+  },
+  // Future calculators: just add another object here.
+  // {
+  //   folder: 'next-calculator',
+  //   name:   'Next Calculator Name',
+  //   sub:    'One-line description.',
+  //   status: 'POC',
+  // },
+];
+
+// Match version filenames: v5.31.html  or  v5.31-mobile.html
+const VERSION_RE = /^v(\d+)\.(\d+)(-mobile)?\.html$/i;
+
+// ---- Render ----------------------------------------------------------------
+const root = document.getElementById('calc_list');
+
+function statusBadgeHtml(status){
+  const cls = status === 'LIVE' ? 'live' : 'poc';
+  return `<span class="calc-status ${cls}">${status}</span>`;
+}
+
+function versionRowHtml(v, isLatest, calcFolder){
+  const tagType  = v.mobile ? 'mobile' : 'desktop';
+  const tagLabel = v.mobile ? 'Mobile' : 'Desktop';
+  const latestTag = isLatest ? `<span class="version-tag latest">Latest</span>` : '';
+  return `
+    <li>
+      <a class="version-row" href="/${calcFolder}/${v.file}">
+        <div class="version-meta">
+          <span class="version-num">v${v.major}.${v.minor}</span>
+          ${latestTag}
+          <span class="version-tag ${tagType}">${tagLabel}</span>
+        </div>
+        <span class="version-cta">Open →</span>
+      </a>
+    </li>`;
+}
+
+function calcCardHtml(calc, files, errorMessage){
+  let body = '';
+  if(errorMessage){
+    body = `<div class="error-row">${errorMessage}</div>`;
+  } else if(!files || files.length === 0){
+    body = `<div class="loading-row">No published versions yet.</div>`;
+  } else {
+    // Sort newest first
+    const sortDesc = (a,b) => (b.major - a.major) || (b.minor - a.minor);
+    const desktop = files.filter(v => !v.mobile).sort(sortDesc);
+    const mobile  = files.filter(v =>  v.mobile).sort(sortDesc);
+
+    let listHtml = '<ul class="version-list">';
+    if(desktop[0]) listHtml += versionRowHtml(desktop[0], true, calc.folder);
+    if(mobile[0])  listHtml += versionRowHtml(mobile[0],  true, calc.folder);
+    listHtml += '</ul>';
+
+    // Older versions, hidden behind a toggle
+    const older = [...desktop.slice(1), ...mobile.slice(1)].sort(sortDesc);
+    if(older.length){
+      listHtml += `<button class="older-toggle" type="button" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide older versions':'Show ${older.length} older version${older.length===1?'':'s'}'">Show ${older.length} older version${older.length===1?'':'s'}</button>`;
+      listHtml += '<ul class="older-list">';
+      older.forEach(v => { listHtml += versionRowHtml(v, false, calc.folder); });
+      listHtml += '</ul>';
+    }
+    body = listHtml;
+  }
+  return `
+    <div class="calc-card">
+      <div class="calc-head">
+        <div>
+          <h2>${calc.name}</h2>
+          <p class="calc-sub">${calc.sub}</p>
+        </div>
+        ${statusBadgeHtml(calc.status)}
+      </div>
+      ${body}
+    </div>`;
+}
+
+// ---- Fetch + render --------------------------------------------------------
+async function loadCalculator(calc){
+  const apiUrl = `https://api.github.com/repos/${REPO}/contents/${calc.folder}`;
+  try {
+    const resp = await fetch(apiUrl, {
+      headers: { 'Accept': 'application/vnd.github+json' },
+    });
+    if(!resp.ok){
+      throw new Error(`GitHub API ${resp.status}`);
+    }
+    const data = await resp.json();
+    const versions = data
+      .filter(item => item.type === 'file')
+      .map(item => {
+        const m = item.name.match(VERSION_RE);
+        if(!m) return null;
+        return { file: item.name, major: +m[1], minor: +m[2], mobile: !!m[3] };
+      })
+      .filter(Boolean);
+    return { calc, files: versions, error: null };
+  } catch(err){
+    return {
+      calc,
+      files: [],
+      error: `Couldn't load versions automatically (${err.message}). <a href="https://github.com/${REPO}/tree/main/${calc.folder}" target="_blank">Browse on GitHub →</a>`,
+    };
+  }
+}
+
+(async () => {
+  const results = await Promise.all(CALCULATORS.map(loadCalculator));
+  root.innerHTML = results.map(r => calcCardHtml(r.calc, r.files, r.error)).join('');
+  const stamp = document.createElement('p');
+  stamp.className = 'last-updated';
+  stamp.textContent = `Last refreshed ${new Date().toLocaleString('en-AU', {dateStyle:'medium', timeStyle:'short'})}`;
+  root.appendChild(stamp);
+})();
+</script>
 
 </body>
 </html>
